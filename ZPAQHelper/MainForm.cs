@@ -587,6 +587,10 @@ namespace ZPAQHelper
                 StreamReader error = new StreamReader(p.StandardError.BaseStream, System.Text.Encoding.UTF8); //p.StandardError;//截取错误信息
                 //char[] c = new char[5000];
                 //reader.ReadBlock(c, 0, 5000);
+                reader.ReadLine();
+                reader.ReadLine();
+                reader.ReadLine();
+                reader.ReadLine();
                 string str = reader.ReadToEnd() + error.ReadToEnd();
                 p.WaitForExit();//等待程序执行完退出进程
                 p.Close();
@@ -904,6 +908,18 @@ namespace ZPAQHelper
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            //FileStream fs = new FileStream(@"D:\test.txt", FileMode.Open, FileAccess.ReadWrite);
+            //fs.SetLength(12);
+            //byte[] c = new byte[6];
+            //byte[] newbyte = { 40, 41, 42, 43, 44, 45, 46 };
+            //fs.Read(c, 0, 6);
+            //fs.Position = 6;
+            //fs.Write(c, 0, 6);
+            //fs.Position = 0;
+            //fs.Write(newbyte, 0, 6);
+            //fs.Close();
+
+
             ResetSettings();
             UpdateListInfo();
 
@@ -1296,17 +1312,18 @@ namespace ZPAQHelper
                         int addtionlength = sfxlength + zpaqlength;
                         int formerlength = (int)fs.Length;
                         int blocksize = 1024 * 128;
-                        int leftbehind = addtionlength - (addtionlength / blocksize) * blocksize;
-                        int count = addtionlength / blocksize;
-                        fs.SetLength(fs.Length + addtionlength);
+                        int leftbehind = formerlength - (formerlength / blocksize) * blocksize;
+                        int count = formerlength / blocksize;
+                        int newlength = formerlength + addtionlength;
+                        fs.SetLength(newlength);
 
                         byte[] content = new byte[blocksize];
                         int i = 0;
                         for (; i < count; i++)
                         {
-                            fs.Position = formerlength - blocksize*i;
+                            fs.Position = formerlength - blocksize*(i+1);
                             fs.Read(content, 0, blocksize);
-                            fs.Position = fs.Length - blocksize * i;
+                            fs.Position = newlength - blocksize * (i+1);
                             fs.Write(content, 0, blocksize);
                         }
                         content = new byte[leftbehind];
