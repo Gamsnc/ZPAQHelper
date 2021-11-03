@@ -11,7 +11,7 @@ Main Features:
 
 3. can build sfx file.
 
-4. zpaq64.exe process priority is adjustable.
+4. zpaq64.exe process's cpu priority is adjustable.
  
 
 
